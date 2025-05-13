@@ -64,11 +64,12 @@ const createPlayers = (isSinglePlayer: boolean = false): Player[] => {
 // Create invaders formation
 const createInvaders = (wave: number = 1): Invader[] => {
   const invaders: Invader[] = [];
-  const startX = (GAME_WIDTH - (INVADER_COLS * (INVADER_WIDTH + INVADER_COL_GAP) - INVADER_COL_GAP)) / 2;
+  const maxCols = Math.min(INVADER_COLS, Math.floor((GAME_WIDTH - 40) / (INVADER_WIDTH + INVADER_COL_GAP)));
+  const startX = (GAME_WIDTH - (maxCols * (INVADER_WIDTH + INVADER_COL_GAP) - INVADER_COL_GAP)) / 2;
   const startY = 50 + Math.min(100, (wave - 1) * 20);
 
   for (let row = 0; row < INVADER_ROWS; row++) {
-    for (let col = 0; col < INVADER_COLS; col++) {
+    for (let col = 0; col < maxCols; col++) {
       invaders.push({
         id: `invader-${row}-${col}-${uuidv4()}`,
         x: startX + col * (INVADER_WIDTH + INVADER_COL_GAP),
