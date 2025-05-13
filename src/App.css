@@ -56,7 +56,7 @@ body {
   animation: greenFlicker 2s infinite;
   text-shadow: 0 0 5px #00ff00;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game-over {
@@ -69,7 +69,7 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0, 0, 0, 0.9);
+  background-color: rgba(0, 0, 0, 0.7);
   z-index: 10;
 }
 
@@ -80,7 +80,7 @@ body {
   margin-bottom: 2rem;
   animation: greenFlicker 1s infinite;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game-over p {
@@ -88,7 +88,7 @@ body {
   color: #00ff00;
   margin-bottom: 2rem;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game-over button {
@@ -101,7 +101,7 @@ body {
   transition: all 0.3s ease;
   font-family: 'Courier New', monospace;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .game-over button:hover {
@@ -131,7 +131,7 @@ body {
   transition: all 0.3s ease;
   font-family: 'Courier New', monospace;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .start-screen button:hover {
@@ -146,7 +146,7 @@ body {
   display: flex;
   gap: 2rem;
   position: relative;
-  z-index: 1;
+  z-index: 2;
 }
 
 .player-controls {

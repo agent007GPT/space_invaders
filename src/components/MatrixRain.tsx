@@ -43,9 +43,16 @@ export const MatrixRain: React.FC<MatrixRainProps> = ({ className = '' }) => {
           Math.floor(Math.random() * MATRIX_CHARACTERS.length)
         );
         
-        context.fillText(text, i * fontSize, drops[i] * fontSize);
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        // Add glow effect
+        context.shadowBlur = 4;
+        context.shadowColor = '#0F0';
+        context.fillText(text, x, y);
+        context.shadowBlur = 0;
 
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+        if (y > canvas.height && Math.random() > 0.975) {
           drops[i] = 0;
         }
         drops[i]++;
@@ -64,8 +71,12 @@ export const MatrixRain: React.FC<MatrixRainProps> = ({ className = '' }) => {
   return (
     <canvas
       ref={canvasRef}
-      className={`fixed top-0 left-0 w-full h-full -z-10 ${className}`}
-      style={{ opacity: 0.5 }}
+      className={`absolute top-0 left-0 w-full h-full ${className}`}
+      style={{ 
+        opacity: 0.7,
+        zIndex: 0,
+        background: 'transparent'
+      }}
     />
   );
 };
