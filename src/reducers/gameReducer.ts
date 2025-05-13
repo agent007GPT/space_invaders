@@ -14,6 +14,7 @@ import {
   PLAYER_SHOT_SPEED, 
   INVADER_SHOT_SPEED,
   INVADER_DROP_DISTANCE,
+  INVADER_MOVE_AMOUNT,
   INVADER_ROWS,
   INVADER_COLS,
   INVADER_ROW_GAP,
@@ -296,10 +297,9 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
           y: invader.y + INVADER_DROP_DISTANCE
         }));
       } else {
-        const moveAmount = 5;
         newInvaders = newInvaders.map(invader => ({
           ...invader,
-          x: direction === 'left' ? invader.x - moveAmount : invader.x + moveAmount
+          x: direction === 'left' ? invader.x - INVADER_MOVE_AMOUNT : invader.x + INVADER_MOVE_AMOUNT
         }));
       }
       

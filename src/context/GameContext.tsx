@@ -7,7 +7,8 @@ import {
   INVADER_MOVE_INTERVAL, 
   FRAME_RATE,
   getGameDimensions,
-  INVADER_WIDTH
+  INVADER_WIDTH,
+  INVADER_BOUNDARY_PADDING
 } from '../constants/gameConstants';
 import { useGameLoop } from '../hooks/useGameLoop';
 
@@ -152,7 +153,6 @@ export function useGame() {
 function checkIfInvadersReachedEdge(invaders: Invader[], gameWidth: number): boolean {
   if (invaders.length === 0) return false;
   
-  const padding = 10;
   let leftmostX = Number.MAX_SAFE_INTEGER;
   let rightmostX = 0;
   
@@ -161,5 +161,5 @@ function checkIfInvadersReachedEdge(invaders: Invader[], gameWidth: number): boo
     rightmostX = Math.max(rightmostX, invader.x + invader.width);
   });
   
-  return leftmostX <= padding || rightmostX >= gameWidth - padding;
+  return leftmostX <= INVADER_BOUNDARY_PADDING || rightmostX >= gameWidth - INVADER_BOUNDARY_PADDING;
 }

@@ -26,6 +26,7 @@ export const INVADER_SHOT_SPEED = Math.max(2, Math.floor(GAME_HEIGHT / 200));
 export const INITIAL_INVADER_SPEED = Math.max(1, Math.floor(GAME_WIDTH / 800));
 export const MAX_INVADER_SPEED = Math.max(3, Math.floor(GAME_WIDTH / 160));
 export const INVADER_DROP_DISTANCE = Math.max(8, Math.floor(GAME_HEIGHT / 60));
+export const INVADER_MOVE_AMOUNT = Math.max(3, Math.floor(GAME_WIDTH / 200));
 
 // Game timing (in milliseconds)
 export const FRAME_RATE = 1000 / 60; // 60 FPS
@@ -39,6 +40,7 @@ export const INVADER_ROW_GAP = Math.max(10, Math.floor(GAME_HEIGHT / 40));
 export const INVADER_COL_GAP = Math.max(10, Math.floor(GAME_WIDTH / 80));
 export const BUNKER_COUNT = Math.max(2, Math.floor(GAME_WIDTH / 200));
 export const INITIAL_LIVES = 3;
+export const INVADER_BOUNDARY_PADDING = Math.max(10, Math.floor(GAME_WIDTH / 40));
 
 // Points
 export const INVADER_POINTS = {
@@ -69,5 +71,4 @@ export const CONTROLS = {
 };
 
 // Game boundaries for invaders
-export const INVADER_BOUNDARY_PADDING = Math.max(10, Math.floor(GAME_WIDTH / 40));
 export const GAME_OVER_LINE = GAME_HEIGHT - PLAYER_HEIGHT - 30;
