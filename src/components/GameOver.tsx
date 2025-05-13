@@ -47,7 +47,7 @@ export const GameOver: React.FC = () => {
       const { error: scoreError } = await supabase
         .from('highscores')
         .insert([{ 
-          user_email: playerName, // Using the user_email field to store player name
+          user_email: playerName,
           score: totalScore,
           wave,
           created_at: new Date()
@@ -119,7 +119,12 @@ export const GameOver: React.FC = () => {
             value={playerName}
             onChange={(e) => setPlayerName(e.target.value)}
             placeholder="Enter your name"
-            className="bg-black border-2 border-[#00ff00] text-[#00ff00] p-2 font-mono"
+            className="bg-black border-2 border-[#00ff00] text-[#00ff00] p-2 font-mono outline-none focus:border-[#00ff00] focus:ring-1 focus:ring-[#00ff00] w-full"
+            style={{
+              caretColor: '#00ff00',
+              zIndex: 100,
+              position: 'relative'
+            }}
             required
             disabled={loading}
             maxLength={20}
@@ -129,7 +134,7 @@ export const GameOver: React.FC = () => {
             <button 
               type="submit" 
               disabled={loading}
-              className="relative"
+              className="relative bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
             >
               {loading ? 'Saving...' : 'Save Score'}
             </button>
