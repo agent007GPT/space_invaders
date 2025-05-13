@@ -1,8 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GameState, GameAction, Player, Invader, Shot, Bunker } from '../types/gameTypes';
 import { 
-  GAME_WIDTH, 
-  GAME_HEIGHT,
+  getGameDimensions,
   PLAYER_WIDTH, 
   PLAYER_HEIGHT, 
   INVADER_WIDTH, 
@@ -25,12 +24,14 @@ import {
   GAME_OVER_LINE
 } from '../constants/gameConstants';
 
+const { width: GAME_WIDTH, height: GAME_HEIGHT } = getGameDimensions();
+
 // Create initial players
-const createPlayers = (): Player[] => {
-  return [
+const createPlayers = (isSinglePlayer: boolean = false): Player[] => {
+  const players: Player[] = [
     {
       id: 'player1',
-      x: GAME_WIDTH / 3 - PLAYER_WIDTH / 2,
+      x: GAME_WIDTH / 2 - PLAYER_WIDTH / 2,
       y: GAME_HEIGHT - PLAYER_HEIGHT - 10,
       width: PLAYER_WIDTH,
       height: PLAYER_HEIGHT,
@@ -39,8 +40,11 @@ const createPlayers = (): Player[] => {
       active: true,
       playerNumber: 1,
       score: 0
-    },
-    {
+    }
+  ];
+
+  if (!isSinglePlayer) {
+    players.push({
       id: 'player2',
       x: (GAME_WIDTH * 2) / 3 - PLAYER_WIDTH / 2,
       y: GAME_HEIGHT - PLAYER_HEIGHT - 10,
@@ -51,8 +55,10 @@ const createPlayers = (): Player[] => {
       active: true,
       playerNumber: 2,
       score: 0
-    }
-  ];
+    });
+  }
+
+  return players;
 };
 
 // Create invaders formation
@@ -118,7 +124,8 @@ export const initialState: GameState = {
   wave: 1,
   isGameOver: false,
   isStarted: false,
-  isPaused: false
+  isPaused: false,
+  isSinglePlayer: false
 };
 
 // Check for collisions between two objects
@@ -135,10 +142,18 @@ const isColliding = (obj1: { x: number; y: number; width: number; height: number
 // Game reducer
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
+    case 'SET_SINGLE_PLAYER':
+      return {
+        ...state,
+        isSinglePlayer: action.payload.isSinglePlayer,
+        players: createPlayers(action.payload.isSinglePlayer)
+      };
+    
     case 'START_GAME':
       return {
         ...initialState,
-        players: createPlayers(),
+        isSinglePlayer: state.isSinglePlayer,
+        players: createPlayers(state.isSinglePlayer),
         invaders: createInvaders(1),
         bunkers: createBunkers(),
         wave: 1,
