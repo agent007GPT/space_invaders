@@ -28,49 +28,39 @@ export const MatrixRain: React.FC<MatrixRainProps> = ({ className = '' }) => {
     const fontSize = 14;
     const columns = Math.floor(canvas.width / fontSize);
     const drops: number[] = new Array(columns).fill(1);
-    let lastFrame = 0;
-    const frameInterval = 50; // Increase this value to slow down the animation (milliseconds)
     
     // Animation loop
     let animationFrameId: number;
-    const draw = (timestamp: number) => {
-      // Only update every frameInterval milliseconds
-      if (timestamp - lastFrame >= frameInterval) {
-        context.fillStyle = 'rgba(0, 0, 0, 0.05)';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+    const draw = () => {
+      context.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      context.fillRect(0, 0, canvas.width, canvas.height);
 
-        context.fillStyle = '#0F0';
-        context.font = `${fontSize}px monospace`;
+      context.fillStyle = '#0F0';
+      context.font = `${fontSize}px monospace`;
 
-        for (let i = 0; i < drops.length; i++) {
-          // Only update some drops each frame for a more varied effect
-          if (Math.random() > 0.1) continue; // 90% chance to skip updating each drop
+      for (let i = 0; i < drops.length; i++) {
+        const text = MATRIX_CHARACTERS.charAt(
+          Math.floor(Math.random() * MATRIX_CHARACTERS.length)
+        );
+        
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+        
+        // Add glow effect
+        context.shadowBlur = 4;
+        context.shadowColor = '#0F0';
+        context.fillText(text, x, y);
+        context.shadowBlur = 0;
 
-          const text = MATRIX_CHARACTERS.charAt(
-            Math.floor(Math.random() * MATRIX_CHARACTERS.length)
-          );
-          
-          const x = i * fontSize;
-          const y = drops[i] * fontSize;
-          
-          // Add glow effect
-          context.shadowBlur = 4;
-          context.shadowColor = '#0F0';
-          context.fillText(text, x, y);
-          context.shadowBlur = 0;
-
-          // Slower reset of drops
-          if (y > canvas.height && Math.random() > 0.99) { // Reduced chance to reset
-            drops[i] = 0;
-          }
-          drops[i] += 0.5; // Reduced drop speed (was 1)
+        if (y > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
         }
-        lastFrame = timestamp;
+        drops[i]++;
       }
       animationFrameId = requestAnimationFrame(draw);
     };
 
-    draw(0);
+    draw();
 
     return () => {
       window.removeEventListener('resize', resizeCanvas);
