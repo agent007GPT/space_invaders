@@ -3,7 +3,8 @@ import { useGame } from '../context/GameContext';
 import { CONTROLS } from '../constants/gameConstants';
 
 export const StartScreen: React.FC = () => {
-  const { dispatch } = useGame();
+  const { dispatch, state } = useGame();
+  const { isSinglePlayer } = state;
 
   const handleStartGame = () => {
     dispatch({ type: 'START_GAME' });
@@ -17,17 +18,28 @@ export const StartScreen: React.FC = () => {
       <div className="controls-info">
         <div className="player-controls">
           <h3>Player 1</h3>
-          <p>LEFT: {CONTROLS.PLAYER1.LEFT.toUpperCase()}</p>
-          <p>RIGHT: {CONTROLS.PLAYER1.RIGHT.toUpperCase()}</p>
-          <p>FIRE: {CONTROLS.PLAYER1.FIRE.toUpperCase()}</p>
+          {isSinglePlayer ? (
+            <>
+              <p>TAP to shoot</p>
+              <p>SLIDE LEFT/RIGHT to move</p>
+            </>
+          ) : (
+            <>
+              <p>LEFT: {CONTROLS.PLAYER1.LEFT.toUpperCase()}</p>
+              <p>RIGHT: {CONTROLS.PLAYER1.RIGHT.toUpperCase()}</p>
+              <p>FIRE: {CONTROLS.PLAYER1.FIRE.toUpperCase()}</p>
+            </>
+          )}
         </div>
         
-        <div className="player-controls">
-          <h3>Player 2</h3>
-          <p>LEFT: ←</p>
-          <p>RIGHT: →</p>
-          <p>FIRE: ↑</p>
-        </div>
+        {!isSinglePlayer && (
+          <div className="player-controls">
+            <h3>Player 2</h3>
+            <p>LEFT: ←</p>
+            <p>RIGHT: →</p>
+            <p>FIRE: ↑</p>
+          </div>
+        )}
       </div>
     </div>
   );
