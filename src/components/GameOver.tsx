@@ -90,7 +90,7 @@ export const GameOver: React.FC = () => {
             <h2 className="text-[#00ff00] text-xl mb-2">Top Scores</h2>
             <div className="flex flex-col gap-2">
               {topScores.map((score, index) => (
-                <p key={index} className="font-mono">
+                <p key={index} className="font-mono text-xs">
                   {index + 1}. {score.user_email} - {score.score} (Wave {score.wave})
                 </p>
               ))}
