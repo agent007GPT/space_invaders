@@ -1,7 +1,7 @@
 // Game dimensions
 export const getGameDimensions = () => {
-  const width = Math.min(800, window.innerWidth - 40); // 20px padding on each side
-  const height = Math.min(600, window.innerHeight - 200); // Account for UI elements
+  const width = Math.min(800, window.innerWidth - 20); // 10px padding on each side
+  const height = Math.min(600, window.innerHeight - 150); // Reduced space for UI
   return { width, height };
 };
 
