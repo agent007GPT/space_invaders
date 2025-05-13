@@ -1,11 +1,12 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import React, { createContext, useContext, useReducer, useEffect, useState } from 'react';
 import { GameState, GameAction, Player, Invader, Bunker } from '../types/gameTypes';
 import { gameReducer, initialState } from '../reducers/gameReducer';
 import { 
   CONTROLS, 
   INVADER_SHOOTING_CHANCE, 
   INVADER_MOVE_INTERVAL, 
-  FRAME_RATE 
+  FRAME_RATE,
+  GAME_WIDTH 
 } from '../constants/gameConstants';
 import { useGameLoop } from '../hooks/useGameLoop';
 
@@ -17,8 +18,23 @@ interface GameContextType {
 const GameContext = createContext<GameContextType | undefined>(undefined);
 
 export function GameProvider({ children }: { children: React.ReactNode }) {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
-  const { isStarted, isPaused, isGameOver, invaders } = state;
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [state, dispatch] = useReducer(gameReducer, { ...initialState, isSinglePlayer: isMobile });
+  const { isStarted, isPaused, isGameOver, invaders, isSinglePlayer } = state;
+
+  // Handle window resize
+  useEffect(() => {
+    const handleResize = () => {
+      const mobile = window.innerWidth < 768;
+      setIsMobile(mobile);
+      if (mobile !== isSinglePlayer) {
+        dispatch({ type: 'SET_SINGLE_PLAYER', payload: { isSinglePlayer: mobile } });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isSinglePlayer]);
 
   // Set up keyboard controls
   useEffect(() => {
@@ -34,13 +50,15 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'PLAYER_SHOOT', payload: { playerId: 'player1' } });
       }
 
-      // Player 2 controls
-      if (e.key === CONTROLS.PLAYER2.LEFT) {
-        dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player2', direction: 'left' } });
-      } else if (e.key === CONTROLS.PLAYER2.RIGHT) {
-        dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player2', direction: 'right' } });
-      } else if (e.key === CONTROLS.PLAYER2.FIRE) {
-        dispatch({ type: 'PLAYER_SHOOT', payload: { playerId: 'player2' } });
+      // Player 2 controls (only if not in single player mode)
+      if (!isSinglePlayer) {
+        if (e.key === CONTROLS.PLAYER2.LEFT) {
+          dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player2', direction: 'left' } });
+        } else if (e.key === CONTROLS.PLAYER2.RIGHT) {
+          dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player2', direction: 'right' } });
+        } else if (e.key === CONTROLS.PLAYER2.FIRE) {
+          dispatch({ type: 'PLAYER_SHOOT', payload: { playerId: 'player2' } });
+        }
       }
 
       // Pause game
@@ -51,7 +69,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isStarted, isPaused, isGameOver]);
+  }, [isStarted, isPaused, isGameOver, isSinglePlayer]);
 
   // Game loop
   useGameLoop(

@@ -17,7 +17,7 @@ export interface Player extends GameObject {
   lives: number;
   canShoot: boolean;
   playerNumber: 1 | 2;
-  score: number; // Add score to player
+  score: number;
 }
 
 export interface Invader extends GameObject {
@@ -33,7 +33,6 @@ export interface Shot extends GameObject {
 }
 
 export interface Bunker extends GameObject {
-  // Represent bunker as a grid of pixels
   grid: boolean[][];
 }
 
@@ -46,6 +45,7 @@ export interface GameState {
   isGameOver: boolean;
   isStarted: boolean;
   isPaused: boolean;
+  isSinglePlayer: boolean;
 }
 
 export type GameAction =
@@ -62,4 +62,5 @@ export type GameAction =
   | { type: 'START_GAME' }
   | { type: 'RESET_GAME' }
   | { type: 'TOGGLE_PAUSE' }
-  | { type: 'NEXT_WAVE' };
+  | { type: 'NEXT_WAVE' }
+  | { type: 'SET_SINGLE_PLAYER'; payload: { isSinglePlayer: boolean } };
