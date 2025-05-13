@@ -6,7 +6,8 @@ import {
   INVADER_SHOOTING_CHANCE, 
   INVADER_MOVE_INTERVAL, 
   FRAME_RATE,
-  GAME_WIDTH 
+  getGameDimensions,
+  INVADER_WIDTH
 } from '../constants/gameConstants';
 import { useGameLoop } from '../hooks/useGameLoop';
 
@@ -21,6 +22,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const [state, dispatch] = useReducer(gameReducer, { ...initialState, isSinglePlayer: isMobile });
   const { isStarted, isPaused, isGameOver, invaders, isSinglePlayer } = state;
+  const { width: GAME_WIDTH } = getGameDimensions();
 
   // Handle window resize
   useEffect(() => {
@@ -112,7 +114,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
         dispatch({ type: 'MOVE_INVADERS', payload: { direction: moveDirection } });
         
         // Check if invaders have reached the edge
-        const shouldMoveDown = checkIfInvadersReachedEdge(state.invaders);
+        const shouldMoveDown = checkIfInvadersReachedEdge(state.invaders, GAME_WIDTH);
         
         if (shouldMoveDown) {
           moveDown = true;
@@ -147,9 +149,10 @@ export function useGame() {
 }
 
 // Helper function to check if invaders have reached the edge
-function checkIfInvadersReachedEdge(invaders: Invader[]): boolean {
+function checkIfInvadersReachedEdge(invaders: Invader[], gameWidth: number): boolean {
   if (invaders.length === 0) return false;
   
+  const padding = 10;
   let leftmostX = Number.MAX_SAFE_INTEGER;
   let rightmostX = 0;
   
@@ -158,5 +161,5 @@ function checkIfInvadersReachedEdge(invaders: Invader[]): boolean {
     rightmostX = Math.max(rightmostX, invader.x + invader.width);
   });
   
-  return leftmostX <= 10 || rightmostX >= 790;
+  return leftmostX <= padding || rightmostX >= gameWidth - padding;
 }
