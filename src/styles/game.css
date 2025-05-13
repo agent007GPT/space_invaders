@@ -105,7 +105,6 @@
   will-change: transform;
 }
 
-/* Pixel-based elements */
 .pixel-row {
   display: flex;
 }
@@ -114,7 +113,6 @@
   background-color: #00ff00 !important;
 }
 
-/* Matrix flicker effect */
 @keyframes greenFlicker {
   0% {
     opacity: 0.8;
@@ -130,7 +128,6 @@
   }
 }
 
-/* Player shot animation */
 .player-shot {
   animation: shotGlow 0.3s infinite alternate;
 }
@@ -241,19 +238,19 @@ body {
 }
 
 .game-over h1 {
-  font-size: 2rem;
+  font-size: 1.5rem;
   color: #00ff00;
   text-transform: uppercase;
-  margin-bottom: 2rem;
+  margin-bottom: 1rem;
   animation: greenFlicker 1s infinite;
   position: relative;
   z-index: 2;
 }
 
 .game-over p {
-  font-size: 1.5rem;
+  font-size: 0.875rem;
   color: #00ff00;
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
   position: relative;
   z-index: 2;
 }
@@ -262,8 +259,8 @@ body {
   background-color: transparent;
   border: 2px solid #00ff00;
   color: #00ff00;
-  padding: 0.8rem 2rem;
-  font-size: 1.2rem;
+  padding: 0.5rem 1.5rem;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s ease;
   font-family: 'Courier New', monospace;

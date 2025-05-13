@@ -79,16 +79,16 @@ export const GameOver: React.FC = () => {
     <div className="game-over">
       <MatrixRain />
       <div className="game-over-content max-h-[80vh] overflow-y-auto p-4 flex flex-col items-center">
-        <h1>Game Over</h1>
-        <p>Player 1 Score: {players[0]?.score || 0}</p>
-        {players[1] && <p>Player 2 Score: {players[1]?.score || 0}</p>}
-        <p>Total Score: {totalScore}</p>
-        <p>Waves Survived: {wave}</p>
+        <h1 className="text-xl mb-2">Game Over</h1>
+        <p className="text-sm mb-1">Player 1 Score: {players[0]?.score || 0}</p>
+        {players[1] && <p className="text-sm mb-1">Player 2 Score: {players[1]?.score || 0}</p>}
+        <p className="text-sm mb-1">Total Score: {totalScore}</p>
+        <p className="text-sm mb-2">Waves Survived: {wave}</p>
         
         {topScores.length > 0 && (
-          <div className="mt-4 mb-4">
-            <h2 className="text-[#00ff00] text-xl mb-2">Top Scores</h2>
-            <div className="flex flex-col gap-2">
+          <div className="mt-2 mb-2">
+            <h2 className="text-[#00ff00] text-base mb-1">Top Scores</h2>
+            <div className="flex flex-col gap-1">
               {topScores.map((score, index) => (
                 <p key={index} className="font-mono text-xs">
                   {index + 1}. {score.user_email} - {score.score} (Wave {score.wave})
@@ -99,11 +99,11 @@ export const GameOver: React.FC = () => {
         )}
         
         {!showSaveScore && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-2 mt-2">
             <button onClick={handlePlayAgain}>Play Again</button>
             <button 
               onClick={() => setShowSaveScore(true)}
-              className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
+              className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-sm cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
             >
               Save High Score
             </button>
@@ -111,16 +111,16 @@ export const GameOver: React.FC = () => {
         )}
 
         {showSaveScore && (
-          <form onSubmit={saveHighScore} className="flex flex-col gap-4 w-full max-w-md">
-            {error && <p className="text-red-500">{error}</p>}
-            {success && <p className="text-[#00ff00]">{success}</p>}
+          <form onSubmit={saveHighScore} className="flex flex-col gap-2 w-full max-w-md mt-2">
+            {error && <p className="text-red-500 text-xs">{error}</p>}
+            {success && <p className="text-[#00ff00] text-xs">{success}</p>}
             
             <input
               type="text"
               value={playerName}
               onChange={(e) => setPlayerName(e.target.value)}
               placeholder="Enter your name"
-              className="bg-black border-2 border-[#00ff00] text-[#00ff00] p-2 font-mono outline-none focus:border-[#00ff00] focus:ring-1 focus:ring-[#00ff00] w-full"
+              className="bg-black border-2 border-[#00ff00] text-[#00ff00] p-2 font-mono outline-none focus:border-[#00ff00] focus:ring-1 focus:ring-[#00ff00] w-full text-sm"
               style={{
                 caretColor: '#00ff00',
                 zIndex: 100,
@@ -131,11 +131,11 @@ export const GameOver: React.FC = () => {
               maxLength={20}
             />
             
-            <div className="flex gap-4">
+            <div className="flex gap-2">
               <button 
                 type="submit" 
                 disabled={loading}
-                className="relative bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
+                className="relative bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-sm cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
               >
                 {loading ? 'Saving...' : 'Save Score'}
               </button>
@@ -143,7 +143,7 @@ export const GameOver: React.FC = () => {
                 type="button" 
                 onClick={() => setShowSaveScore(false)}
                 disabled={loading}
-                className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
+                className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-sm cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
               >
                 Cancel
               </button>
