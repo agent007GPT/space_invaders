@@ -55,6 +55,7 @@ body {
   letter-spacing: 0.5rem;
   animation: greenFlicker 2s infinite;
   text-shadow: 0 0 5px #00ff00;
+  background-color: black;
 }
 
 .game-over {
