@@ -10,14 +10,14 @@ export const GameOver: React.FC = () => {
   
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showSignup, setShowSignup] = useState(false);
+  const [showAuth, setShowAuth] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
   const [topScores, setTopScores] = useState<Array<{ score: number; wave: number; user_email: string }>>([]);
 
   useEffect(() => {
-    // Fetch top scores
     const fetchTopScores = async () => {
       const { data, error } = await supabase
         .from('highscores')
@@ -37,34 +37,52 @@ export const GameOver: React.FC = () => {
     dispatch({ type: 'START_GAME' });
   };
 
-  const handleSignup = async (e: React.FormEvent) => {
+  const saveHighScore = async (userId: string) => {
+    const { error: scoreError } = await supabase
+      .from('highscores')
+      .insert([{ 
+        user_id: userId,
+        user_email: email,
+        score: totalScore,
+        wave,
+        created_at: new Date()
+      }]);
+
+    if (scoreError) throw scoreError;
+  };
+
+  const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
 
     try {
-      const { data: authData, error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-      });
+      if (isLogin) {
+        // Handle login
+        const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
 
-      if (signUpError) throw signUpError;
+        if (signInError) throw signInError;
+        await saveHighScore(signInData.user.id);
+        setSuccess('Score saved successfully!');
+      } else {
+        // Handle signup
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      const { error: scoreError } = await supabase
-        .from('highscores')
-        .insert([{ 
-          user_id: authData.user?.id,
-          user_email: email,
-          score: totalScore,
-          wave,
-          created_at: new Date()
-        }]);
-
-      if (scoreError) throw scoreError;
-
-      setSuccess('Score saved! Check your email to verify your account.');
-      setShowSignup(false);
+        if (signUpError) throw signUpError;
+        if (signUpData.user) {
+          await saveHighScore(signUpData.user.id);
+          setSuccess('Score saved! Check your email to verify your account.');
+        }
+      }
+      
+      setShowAuth(false);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
@@ -94,11 +112,14 @@ export const GameOver: React.FC = () => {
         </div>
       )}
       
-      {!showSignup && (
+      {!showAuth && (
         <div className="flex flex-col gap-4">
           <button onClick={handlePlayAgain}>Play Again</button>
           <button 
-            onClick={() => setShowSignup(true)}
+            onClick={() => {
+              setShowAuth(true);
+              setIsLogin(false);
+            }}
             className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
           >
             Save High Score
@@ -106,8 +127,8 @@ export const GameOver: React.FC = () => {
         </div>
       )}
 
-      {showSignup && (
-        <form onSubmit={handleSignup} className="flex flex-col gap-4 w-full max-w-md">
+      {showAuth && (
+        <form onSubmit={handleAuth} className="flex flex-col gap-4 w-full max-w-md">
           {error && <p className="text-red-500">{error}</p>}
           {success && <p className="text-[#00ff00]">{success}</p>}
           
@@ -132,21 +153,30 @@ export const GameOver: React.FC = () => {
             minLength={6}
           />
           
-          <div className="flex gap-4">
-            <button 
-              type="submit" 
-              disabled={loading}
-              className="relative"
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-4">
+              <button 
+                type="submit" 
+                disabled={loading}
+                className="relative"
+              >
+                {loading ? 'Saving...' : isLogin ? 'Login & Save' : 'Sign Up & Save'}
+              </button>
+              <button 
+                type="button" 
+                onClick={() => setShowAuth(false)}
+                disabled={loading}
+                className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
+              >
+                Cancel
+              </button>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsLogin(!isLogin)}
+              className="text-[#00ff00] underline text-sm mt-2"
             >
-              {loading ? 'Saving...' : 'Save Score'}
-            </button>
-            <button 
-              type="button" 
-              onClick={() => setShowSignup(false)}
-              disabled={loading}
-              className="bg-transparent border-2 border-[#00ff00] text-[#00ff00] px-8 py-2 text-lg cursor-pointer transition-all hover:bg-[#00ff00] hover:text-black font-mono"
-            >
-              Cancel
+              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Log in"}
             </button>
           </div>
         </form>
