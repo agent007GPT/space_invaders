@@ -72,7 +72,7 @@ body {
 }
 
 .game-over h1 {
-  font-size: 4rem;
+  font-size: 1rem;
   color: #00ff00;
   text-transform: uppercase;
   margin-bottom: 2rem;
