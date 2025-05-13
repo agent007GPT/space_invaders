@@ -16,7 +16,7 @@ const Game: React.FC = () => {
         <StartScreen />
       ) : (
         <>
-          {/* <GameUI /> */}
+          <GameUI />
           <GameBoard />
           {isGameOver && <GameOver />}
         </>
