@@ -1,5 +1,6 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
+import { MatrixRain } from './MatrixRain';
 
 export const GameOver: React.FC = () => {
   const { state, dispatch } = useGame();
@@ -12,6 +13,7 @@ export const GameOver: React.FC = () => {
 
   return (
     <div className="game-over">
+      <MatrixRain />
       <h1>Game Over</h1>
       <p>Player 1 Score: {players[0]?.score || 0}</p>
       <p>Player 2 Score: {players[1]?.score || 0}</p>

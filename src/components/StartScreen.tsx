@@ -1,6 +1,7 @@
 import React from 'react';
 import { useGame } from '../context/GameContext';
 import { CONTROLS } from '../constants/gameConstants';
+import { MatrixRain } from './MatrixRain';
 
 export const StartScreen: React.FC = () => {
   const { dispatch, state } = useGame();
@@ -12,6 +13,7 @@ export const StartScreen: React.FC = () => {
 
   return (
     <div className="start-screen">
+      <MatrixRain />
       <h1 className="game-title">Matrix Invaders</h1>
       <button onClick={handleStartGame}>Start Game</button>
       
