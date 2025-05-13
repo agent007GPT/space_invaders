@@ -4,12 +4,13 @@ import { Player } from './Player';
 import { Invader } from './Invader';
 import { Shot } from './Shot';
 import { Bunker } from './Bunker';
-import { getGameDimensions } from '../constants/gameConstants';
+import { getGameDimensions, PLAYER_SPEED } from '../constants/gameConstants';
 
 export const GameBoard: React.FC = () => {
   const { state, dispatch } = useGame();
   const { players, invaders, shots, bunkers, isSinglePlayer } = state;
   const touchStartXRef = useRef<number | null>(null);
+  const lastMoveTimeRef = useRef<number>(0);
   const { width: GAME_WIDTH, height: GAME_HEIGHT } = getGameDimensions();
 
   useEffect(() => {
@@ -26,14 +27,22 @@ export const GameBoard: React.FC = () => {
       e.preventDefault();
       if (touchStartXRef.current === null) return;
 
+      const now = Date.now();
+      if (now - lastMoveTimeRef.current < 16) return; // Limit to ~60fps
+      lastMoveTimeRef.current = now;
+
       const touch = e.touches[0];
       const deltaX = touch.clientX - touchStartXRef.current;
       touchStartXRef.current = touch.clientX;
 
-      if (deltaX < 0) {
-        dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player1', direction: 'left' } });
-      } else if (deltaX > 0) {
-        dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player1', direction: 'right' } });
+      // Scale movement based on screen width
+      const moveThreshold = GAME_WIDTH * 0.01;
+      if (Math.abs(deltaX) > moveThreshold) {
+        if (deltaX < 0) {
+          dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player1', direction: 'left' } });
+        } else {
+          dispatch({ type: 'MOVE_PLAYER', payload: { playerId: 'player1', direction: 'right' } });
+        }
       }
     };
 
@@ -55,7 +64,7 @@ export const GameBoard: React.FC = () => {
         gameBoard.removeEventListener('touchend', handleTouchEnd);
       }
     };
-  }, [dispatch]);
+  }, [dispatch, GAME_WIDTH]);
 
   return (
     <div 
@@ -67,7 +76,9 @@ export const GameBoard: React.FC = () => {
         backgroundColor: '#000',
         border: '1px solid #00ff00',
         overflow: 'hidden',
-        margin: '0 auto'
+        margin: '0 auto',
+        transform: 'translateZ(0)', // Force GPU acceleration
+        willChange: 'transform' // Hint to browser about animations
       }}
     >
       {/* Render players */}
